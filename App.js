@@ -7,7 +7,9 @@ import {
   ScrollView,
   Button,
   TextInput,
+  Image,
 } from 'react-native';
+// import {Image} from 'react-native-remote-svg';
 import FullName from './src/components/FullName';
 
 function App() {
@@ -74,6 +76,43 @@ function App() {
           placeholder="Your name"
           style={styles.input}
         />
+
+        {/*For showing images */}
+        {/*For static image resources */}
+        <View style={styles.imagesContainer}>
+          <Image
+            source={require('./src/assets/images/luffy.jpg')}
+            style={styles.image}
+          />
+        </View>
+
+        {/*For network request for image */}
+        <View style={styles.imagesContainer}>
+          <Image
+            source={{
+              uri: 'https://raw.githubusercontent.com/AboutReact/sampleresource/master/sample_img.png',
+            }}
+            style={styles.image}
+          />
+        </View>
+
+        {/*For uri data image */}
+        <View style={styles.imagesContainer}>
+          <Image
+            source={{
+              uri: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADMAAAAzCAYAAAA6oTAqAAAAEXRFWHRTb2Z0d2FyZQBwbmdjcnVzaEB1SfMAAABQSURBVGje7dSxCQBACARB+2/ab8BEeQNhFi6WSYzYLYudDQYGBgYGBgYGBgYGBgYGBgZmcvDqYGBgmhivGQYGBgYGBgYGBgYGBgYGBgbmQw+P/eMrC5UTVAAAAABJRU5ErkJggg==',
+            }}
+            style={styles.image}
+          />
+        </View>
+
+        {/*For svg image install :- npm install react-native-remote-svg --save  */}
+        <View style={styles.imagesContainer}>
+          <Image
+            source={require('./src/assets/images/birdsvg.jpg')}
+            style={styles.image}
+          />
+        </View>
       </ScrollView>
     </SafeAreaView>
   );
@@ -115,5 +154,18 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderRadius: 15,
     color: '#000',
+  },
+  imagesContainer: {
+    flex: 1,
+    margin: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  image: {
+    width: 200,
+    height: 200,
+    borderColor: '#00f',
+    borderRadius: 15,
+    borderWidth: 2,
   },
 });
