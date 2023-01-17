@@ -8,6 +8,12 @@ import {
   Button,
   TextInput,
   Image,
+  TouchableNativeFeedback,
+  TouchableHighlight,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  Alert,
+  Modal,
 } from 'react-native';
 // import {Image} from 'react-native-remote-svg';
 import FullName from './src/components/FullName';
@@ -18,6 +24,7 @@ function App() {
   const [name, setName] = useState({
     name: '',
   });
+  const [showModal, setShowModal] = useState(false);
 
   const handleChange = text => {
     setName(prevName => {
@@ -28,11 +35,39 @@ function App() {
     });
   };
 
+  const btnClickHandler = title => {
+    Alert.alert('Alert for : ' + title);
+  };
+
   return (
     // For preventing UI to render in safearea
     <SafeAreaView style={styles.rootContainer}>
       {/*For making overflowing content scollable */}
       <ScrollView style={styles.scrollView}>
+        {/*For modal */}
+        <Modal
+          animationType={'slide'}
+          transparent={true}
+          visible={showModal}
+          onRequestClose={() => {
+            console.log('Modal has been closed!');
+          }}>
+          <View
+            style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+            <View style={styles.modalContainer}>
+              <Text style={styles.modalText}>Modal is opend!</Text>
+              <View style={styles.button}>
+                <Button
+                  title="Close Modal"
+                  onPress={() => {
+                    setShowModal(!showModal);
+                  }}
+                />
+              </View>
+            </View>
+          </View>
+        </Modal>
+
         {/*container to hold other components */}
         <View style={styles.viewContainer}>
           <Text style={styles.heading}>React Natice Component Demo</Text>
@@ -113,6 +148,49 @@ function App() {
             style={styles.image}
           />
         </View>
+
+        {/*To perfom click event and overcome styling */}
+        {/*Using touchable native feedback */}
+        <TouchableNativeFeedback
+          onPress={() => btnClickHandler('TouchableNativeFeedback Pressed!')}>
+          <View style={styles.btnContainer}>
+            <Text style={styles.btnText}>Touchable Native Feedback</Text>
+          </View>
+        </TouchableNativeFeedback>
+
+        {/*Using touchable highlight */}
+        <TouchableHighlight
+          onPress={() => btnClickHandler('TouchableHighlight Pressed!')}>
+          <View style={styles.btnContainer}>
+            <Text style={styles.btnText}>Touchable Highlight</Text>
+          </View>
+        </TouchableHighlight>
+
+        {/*Using touchable opacity */}
+        <TouchableOpacity
+          onPress={() => btnClickHandler('TouchableOpacity Pressed!')}>
+          <View style={styles.btnContainer}>
+            <Text style={styles.btnText}>Touchable Opacity</Text>
+          </View>
+        </TouchableOpacity>
+
+        {/*Using touchable without feedback */}
+        <TouchableWithoutFeedback
+          onPress={() => btnClickHandler('TouchableWithoutFeedback Pressed!')}>
+          <View style={styles.btnContainer}>
+            <Text style={styles.btnText}>Touchable Without Feedback</Text>
+          </View>
+        </TouchableWithoutFeedback>
+
+        {/*For opening Modal */}
+        <View style={styles.button}>
+          <Button
+            title="Open Modal"
+            onPress={() => {
+              setShowModal(!showModal);
+            }}
+          />
+        </View>
       </ScrollView>
     </SafeAreaView>
   );
@@ -167,5 +245,37 @@ const styles = StyleSheet.create({
     borderColor: '#00f',
     borderRadius: 15,
     borderWidth: 2,
+  },
+  btnContainer: {
+    padding: 20,
+    borderWidth: 2,
+    borderColor: '#000',
+    borderRadius: 10,
+    margin: 20,
+    backgroundColor: '#00f',
+    alignItems: 'center',
+  },
+  btnText: {
+    color: '#fff',
+    fontSize: 20,
+    fontWeight: 'bold',
+  },
+  modalContainer: {
+    padding: 20,
+    borderColor: '#f00',
+    borderWidth: 2,
+    borderRadius: 10,
+    margin: 20,
+    alignItems: 'center',
+    backgroundColor: '#fff',
+    justifyContent: 'center',
+  },
+  modalText: {
+    color: '#000',
+    fontSize: 25,
+    fontWeight: 'bold',
+  },
+  button: {
+    margin: 20,
   },
 });
