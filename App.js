@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   View,
   Text,
@@ -14,9 +14,13 @@ import {
   TouchableWithoutFeedback,
   Alert,
   Modal,
+  Switch,
 } from 'react-native';
+import {Picker} from '@react-native-picker/picker';
 // import {Image} from 'react-native-remote-svg';
 import FullName from './src/components/FullName';
+import Slider from '@react-native-community/slider';
+import {WebView} from 'react-native-webview';
 
 function App() {
   //For storing data specific to component
@@ -24,7 +28,32 @@ function App() {
   const [name, setName] = useState({
     name: '',
   });
-  const [showModal, setShowModal] = useState(false);
+  const [showModal, setShowModal] = useState(false); //For modal
+
+  //For picker
+  const [choosenLabel, setChoosenLabel] = useState('');
+  const [choosenIndex, setChoosenIndex] = useState('2');
+  const [data, setData] = useState([]); //For picker using api data
+
+  //For slider
+  const [sliderValue, setSliderValue] = useState(20);
+
+  //For switch
+  const [switchValue, setSwitchValue] = useState(false);
+
+  const toggleSwitch = value => {
+    setSwitchValue(value);
+  };
+
+  useEffect(() => {
+    //GET request
+    fetch('https://jsonplaceholder.typicode.com/posts', {
+      method: 'GET', //Request type
+    })
+      .then(res => res.json())
+      .then(resJson => setData(resJson))
+      .catch(err => console.error(err));
+  });
 
   const handleChange = text => {
     setName(prevName => {
@@ -191,6 +220,76 @@ function App() {
             }}
           />
         </View>
+
+        {/*For picker = component for selection between different choices same as a Dropdown */}
+        <View style={styles.textContainer}>
+          <Text style={styles.heading}>Choosen label : {choosenLabel}</Text>
+        </View>
+        <View style={styles.textContainer}>
+          <Text style={styles.heading}>Choosen Index : {choosenIndex}</Text>
+        </View>
+        {/*Using Multiple options */}
+        {/* <Picker
+          selectedValue={choosenLabel}
+          onValueChange={(itemValue, itemIndex) => {
+            setChoosenLabel(itemValue);
+            setChoosenIndex(itemIndex);
+          }}
+          style={styles.picker}>
+          <Picker.Item label="Luffy" value="Luffy" />
+          <Picker.Item label="Zoro" value="Zoro" />
+          <Picker.Item label="Nami" value="Nami" />
+          <Picker.Item label="Usopp" value="Usopp" />
+          <Picker.Item label="Sanji" value="Sanji" />
+          <Picker.Item label="Chopper" value="Chopper" />
+          <Picker.Item label="Robin" value="Robin" />
+          <Picker.Item label="Franky" value="Franky" />
+          <Picker.Item label="Brook" value="Brook" />
+          <Picker.Item label="Jimbe" value="Jimbe" />
+        </Picker> */}
+        {/*Using data through api */}
+        <Picker
+          selectedValue={choosenLabel}
+          onValueChange={(itemValue, itemIndex) => {
+            setChoosenLabel(itemValue);
+            setChoosenIndex(itemIndex);
+          }}
+          style={styles.picker}>
+          {data.map(item => {
+            return <Picker.Item value={item.id} label={item.title} />;
+          })}
+        </Picker>
+
+        {/*For switch =  component for getting/showing the boolean value or to select from one out of two. */}
+        <Text style={styles.heading}>
+          {switchValue ? 'Switch is ON' : 'Switch is OFF'}
+        </Text>
+        <Switch
+          style={styles.switch}
+          onValueChange={toggleSwitch}
+          value={switchValue}
+        />
+
+        {/*For slider = component to select a single value from a range of values */}
+        <Text style={styles.heading}>Value of slider is : {sliderValue}</Text>
+        <Slider
+          maximumValue={100}
+          minimumValue={0}
+          minimumTrackTintColor="#307ecc"
+          maximumTrackTintColor="#000"
+          step={1}
+          value={sliderValue}
+          onValueChange={sliderValue => setSliderValue(sliderValue)}
+          style={styles.slider}
+        />
+
+        {/*For webView = component to render the web page into your mobile app */}
+        <View style={styles.webViewConatiner}>
+          <WebView
+            source={{uri: 'https://aboutreact.com'}}
+            style={styles.webView}
+          />
+        </View>
       </ScrollView>
     </SafeAreaView>
   );
@@ -204,9 +303,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  scrollView: {
-    flex: 1,
-  },
+  scrollView: {flex: 1},
   viewContainer: {
     flex: 1,
     alignItems: 'center',
@@ -275,7 +372,24 @@ const styles = StyleSheet.create({
     fontSize: 25,
     fontWeight: 'bold',
   },
-  button: {
+  button: {margin: 20},
+  picker: {
     margin: 20,
+    borderColor: '#000',
+    borderRadius: 10,
+    borderWidth: 2,
+    backgroundColor: '#DDD',
+  },
+  switch: {margin: 30, alignSelf: 'center'},
+  slider: {margin: 30},
+  webViewConatiner: {
+    height: 400,
+    width: 200,
+    margin: 40,
+  },
+  webView: {
+    flex: 1,
+    borderColor: '#000',
+    borderWidth: 2,
   },
 });
